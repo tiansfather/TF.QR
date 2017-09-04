@@ -1,0 +1,72 @@
+﻿@model List<TF.QR.DbRecommand>
+@{
+    var weuser = ViewData["weuser"] as TF.QR.DbWeUser;
+}
+
+<!DOCTYPE html>
+<html>
+<head runat="server">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>推荐金列表</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <link rel="stylesheet" href="//cdn.bootcss.com/weui/1.1.1/style/weui.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/jquery-weui/1.0.1/css/jquery-weui.min.css">
+    <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet">
+</head>
+<body ontouchstart>
+    @if (Model.Count() > 0)
+    {
+        <div class="weui-panel weui-panel_access">
+            <div class="weui-panel__hd">推荐金列表</div>
+            <div class="weui-panel__bd">
+                @foreach (var recommand in Model)
+                {
+                    <a href="javascript:void(0);" class="weui-media-box weui-media-box_appmsg">
+                        <div class="weui-media-box__hd">
+                            <img class="weui-media-box__thumb" src="@recommand.HeadImg">
+                        </div>
+                        <div class="weui-media-box__bd">
+                            <h4 class="weui-media-box__title">@recommand.Fee</h4>
+                            <p class="weui-media-box__desc">@recommand.CreateTime.ToString("yyyy-MM-dd")</p>
+                        </div>
+                    </a>
+                }
+
+            </div>
+            <div class="weui-panel__ft">
+                <a href="javascript:void(0);" class="weui-cell weui-cell_access weui-cell_link">
+                    <div class="weui-cell__bd">查看更多</div>
+                    <span class="weui-cell__ft"></span>
+                </a>
+            </div>
+        </div>
+
+        if (weuser.Bonus > 100)
+        {
+            <a href="javascript:;" class="weui-btn weui-btn_primary">提现申请</a>
+        }
+        else
+        {
+            <div class="weui-cells__title">推荐金超过100后才能进行提现</div>
+        }
+
+    }
+    else
+    {
+        <div class="weui-msg">
+            <div class="weui-msg__icon-area"><i class="weui-icon-info weui-icon_msg"></i></div>
+            <div class="weui-msg__text-area">
+                <h2 class="weui-msg__title">对不起</h2>
+                <p class="weui-msg__desc">您还没有获得推荐金</p>
+            </div>
+            <div class="weui-msg__opr-area">
+                <p class="weui-btn-area">
+                    <a href="javascript:;" class="weui-btn weui-btn_primary">返回首页</a>
+                </p>
+            </div>
+            
+        </div>
+    }
+</body>
+</html>

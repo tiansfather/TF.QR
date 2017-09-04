@@ -15,5 +15,8 @@ namespace TF.QR
         [FieldLength(50)]
         public string WeName { get; set; }
         public decimal Fee { get; set; }
+
+        [Ignore]
+        public string HeadImg { get; set; }
     }
 }

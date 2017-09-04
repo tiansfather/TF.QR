@@ -134,10 +134,24 @@
             return base.RedirectToAction("Edit", new { code = code });
         }
 
+        /// <summary>
+        /// 我的推荐金
+        /// </summary>
+        /// <returns></returns>
         [WeUser]
         public ActionResult Bonus()
         {
-            return View();
+            var openid = Request.Cookies["openid"].Value;
+            var weuser = Config.Helper.CreateWhere<DbWeUser>().Where(o => o.OpenID == openid).SingleOrDefault();
+            var recommands = Config.Helper.CreateWhere<DbRecommand>().Where(o => o.Mobile == weuser.Mobile).OrderBy(o=>o.CreateTime,ToolGood.ReadyGo.OrderType.Desc).SkipTake(0,10);
+            string accessTokenOrAppId = AccessTokenContainer.TryGetAccessToken(Config.AppId, Config.AppSecret, false);
+            foreach(var obj in recommands)
+            {
+                var user = Senparc.Weixin.MP.AdvancedAPIs.UserApi.Info(accessTokenOrAppId, obj.OpenID);
+                obj.HeadImg = user.headimgurl;
+            }
+            ViewData["weuser"] = weuser;
+            return View(recommands);
         }
     }
 }

@@ -2084,6 +2084,7 @@
     <Content Include="Views\Page\Success.cshtml" />
     <Content Include="Views\My\Orders.cshtml" />
     <Content Include="Views\My\WeUsers.cshtml" />
+    <Content Include="Views\Show\Bonus.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

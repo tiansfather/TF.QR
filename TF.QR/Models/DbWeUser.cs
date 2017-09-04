@@ -2,6 +2,7 @@
 {
     using System;
     using System.Runtime.CompilerServices;
+    using ToolGood.ReadyGo.Attributes;
 
     public class DbWeUser : DbBase
     {
@@ -16,6 +17,7 @@
         public decimal Bonus { get; set; }
 
         public string Address { get; set; }
+        
     }
 }
 
