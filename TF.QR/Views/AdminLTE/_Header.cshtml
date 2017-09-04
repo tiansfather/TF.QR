@@ -1,0 +1,31 @@
+﻿@{
+    Layout = null;
+    
+
+}
+<header class="main-header">
+    <a class="logo">
+        <span class="logo-mini"><b>二维码</b></span>
+        <span class="logo-lg"><b>二维码</b>管理系统</span>
+    </a>
+    <nav class="navbar navbar-static-top" role="navigation">
+        <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+            <span class="sr-only">侧边栏切换按钮</span>
+        </a>
+        <div class="navbar-custom-menu">
+            <ul class="nav navbar-nav">
+
+
+                <li class="dropdown user user-menu">
+                    @{Html.RenderAction("_HeaderUserInfo");}
+                </li>
+                <li>
+                    <a href="@Url.Action("Login", "My")">
+                        <i class="fa fa-sign-out"></i>
+                        &nbsp;注销
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</header>

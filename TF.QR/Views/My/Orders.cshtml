@@ -1,0 +1,132 @@
+﻿@{
+    Layout = "~/Views/Shared/_AdminLTE.cshtml";
+    ViewBag.Title = "订单信息";
+}
+
+<iframe id="_hidden" name="_hidden" style="display:none"></iframe>
+<div class="row hide" id="app">
+    <div class="col-md-2">
+        <div class="box box-solid">
+            <div class="box-header with-border">
+                <h3 class="box-title">按付款状态</h3>
+
+                <div class="box-tools">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                        <i class="fa fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="box-body no-padding" style="display: block;">
+                <ul class="nav nav-pills nav-stacked">
+                    <li :class="{active:!querydata.Payed}">
+                        <a href="#" @@click="filterby({Payed:''})">
+                            <i class="fa fa-inbox"></i> 所有
+                        </a>
+                    </li>
+                    <li :class="{active:querydata.Payed==-1}">
+                        <a href="#" @@click="filterby({Payed:-1})">
+                            <i class="fa fa-inbox"></i> 未付款
+                        </a>
+                    </li>
+                    <li :class="{active:querydata.Payed==1}">
+                        <a href="#" @@click="filterby({Payed:1})">
+                            <i class="fa fa-inbox"></i> 已付款
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.box-body -->
+        </div>
+    </div>
+    <div class="col-sm-10">
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">订单信息</h3>
+
+                <div class="box-tools pull-right col-sm-3">
+                    <div class="input-group input-group-sm">
+                        <input type="text" class="form-control" v-model="searchkey">
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-info btn-flat" @@click="filterby({searchkey:searchkey})">Go!</button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body table-responsive no-padding">
+                <table class="table table-hover">
+                    <tr>
+                        <th><input type="checkbox" @@click="checkall" v-model="allchecked" /></th>
+                        <th>产品</th>
+                        <th>姓名</th>
+                        <th>手机号</th>
+                        <th>推荐人</th>
+                        <th>收货地址</th>
+                        <th>金额</th>
+                        <th>付款日期</th>
+                        <th>订单编号</th>
+                        <th>操作</th>
+                    </tr>
+                    <tr v-for="(item,index) in pagedata.Items">
+                        <td><input type="checkbox" :value="item.Id" name="member" v-model='checkedids' /></td>
+                        <td>{{item.Product.ProductName}}</td>
+                        <td>{{item.RealName}}</td>
+                        <td>{{item.Mobile}}</td>
+                        <td>{{item.RecommandMobile}}</td>
+                        <td>{{item.Address}}</td>
+                        <td>{{item.ActualCost}}</td>
+                        <td>{{dateformat(item.PayTime)}}</td>
+                        <td>{{item.OrderNo}}</td>
+                        <td>
+
+                            <div class="btn-group">
+                                @*<button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#submitform" @@click="currentindex=index" title="编辑">
+                                    <i class="fa fa-edit"></i>
+                                </button>*@
+                            </div>
+
+                            <button type="button" class="btn btn-danger btn-sm" @@click="remove(item.Id)" title="删除">
+                                <i class="fa fa-close"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <!-- /.box-body -->
+            <div class="box-footer clearfix">
+                <pagination :page="page" :totalpage="totalpage" @@goto="gotopage"></pagination>
+            </div>
+        </div>
+        <!-- /.box -->
+        <div class="row no-print">
+            <div class="col-xs-12">
+                <div class="btn-group">
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+@section Footer{
+    <script>
+        var page = new pageVue({
+            el: "#app",
+            data: {
+                dataurl: "/data/orders",
+                searchkey:"",
+                currentitem: {},
+            },
+            watch:{
+            },
+            methods: {
+                
+            },
+            computed: {
+            }
+        })
+    </script>
+}

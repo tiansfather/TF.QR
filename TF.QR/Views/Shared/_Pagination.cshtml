@@ -1,0 +1,26 @@
+﻿@model TF.Appointment.PageModel
+@{
+    var url = Model.Url;
+    var currentpage = Model.CurrentPage;
+    var totalpage = Model.TotalPage;
+
+    var minpage = Math.Max(1, currentpage - 3);
+    var maxpage = Math.Min(totalpage, minpage + 7);
+    minpage = Math.Max(1, maxpage - 7);
+}
+
+<ul class="pagination pagination-sm no-margin pull-right">
+    <li><a href="@url.Fmt(1)">&laquo;</a></li>
+    @for (long i = minpage; i <= maxpage; i++)
+    {
+        if (i == currentpage)
+        {
+            <li class=" active"><a href="#" tabindex="0">@i</a></li>
+        }
+        else
+        {
+            <li class=" "><a href="@(url.Fmt(i))" tabindex="0">@i</a></li>
+        }
+    }
+    <li><a href="@url.Fmt(totalpage)">&raquo;</a></li>
+</ul>

@@ -1,0 +1,58 @@
+﻿@{
+    Layout = "~/Views/Shared/_AdminLTE.cshtml";
+    ViewBag.Title = "编码生成";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="box box-info">
+            <div class="box-header with-border">
+                <h3 class="box-title">编码生成</h3>
+            </div>
+            <!-- /.box-header -->
+            <!-- form start -->
+            <form class="form-horizontal">
+                <div class="box-body">
+                    <div class="form-group">
+                        <label for="gennumber" class="col-sm-2 control-label">生成数量</label>
+
+                        <div class="col-sm-10">
+                            <input type="number" class="form-control" id="gennumber" value="100">
+                        </div>
+                    </div>
+                </div>
+                <!-- /.box-body -->
+                <div class="box-footer">                    
+                    <button type="button" class="btn btn-info pull-right" onclick="gen()" id="submitbtn"><i class="fa fa-refresh "></i>&nbsp;&nbsp;&nbsp;&nbsp;生成</button>
+                </div>
+                <!-- /.box-footer -->
+            </form>
+        </div>
+    </div>
+</div>
+@section Footer{
+    <script>
+        function gen() {
+            var gennumber = $("#gennumber").val();
+            if (isNaN(gennumber)) {
+                return false;
+            }
+            if (gennumber <= 0 || gennumber > 1000) {
+                layer.alert("生成数量必须在0与1000之间", { icon: 5 });
+                return false;
+            }
+            $("#submitbtn i").addClass("fa-spin");
+            layer.load(2);
+            $.post("?", { gennumber: gennumber }, function (data) {
+                $("#submitbtn i").removeClass("fa-spin");
+                layer.closeAll();
+                if (data.errCode != 0) {
+                    layer.alert(data.errMsg, { icon: 5 });
+                } else {
+                    layer.alert("生成成功");
+                    //location.href = '/My/QRStorage';
+                }
+            },'json')
+        }
+    </script>
+}

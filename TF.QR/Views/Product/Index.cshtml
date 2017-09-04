@@ -1,0 +1,32 @@
+﻿@model TF.QR.DbProduct
+@{
+
+}
+
+<!DOCTYPE html>
+<html>
+<head runat="server">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>@(Model.ProductName)</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <link rel="stylesheet" href="//cdn.bootcss.com/weui/1.1.1/style/weui.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/jquery-weui/1.0.1/css/jquery-weui.min.css">
+    <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet">
+</head>
+<body ontouchstart>
+        <div style="padding:15px;text-align:center">
+            <img src="/data/thumbfile?filepath=@Model.Photos&w=300" />
+        </div>
+    <div style="padding:15px;">
+        @Html.Raw(Model.Discription)
+    </div>
+    
+    <div style="padding:10px">
+        @{
+            var returnUrl = System.Web.HttpUtility.UrlEncode("/Product/GenBuy/" + Model.Id);
+        }
+        <a href="/OAuth2/Index?returnUrl=@returnUrl" class="weui-btn weui-btn_default">我要购买</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,21 @@
+﻿@{
+    var user = TF.QR.Config.GetCurrentUser();
+}
+<ul class="sidebar-menu">
+        <li class="header">系统设置</li>  
+        @*<li>
+            <a href="pages/widgets.html">
+                <i class="fa fa-th"></i> <span>Widgets</span>
+                <span class="pull-right-container">
+                    <small class="label pull-right bg-green">new</small>
+                </span>
+            </a>
+        </li>*@
+    <li><a href="@Url.Action("Product","My")"><i class="fa fa-book"></i> <span>产品设置</span></a></li>
+    <li class="header">订单管理</li>  
+    <li><a href="@Url.Action("Orders","My")"><i class="fa fa-book"></i> <span>订单信息</span></a></li>
+    <li><a href="@Url.Action("WeUsers","My")"><i class="fa fa-book"></i> <span>会员信息</span></a></li>
+    <li class="header">二维码管理</li>  
+    <li><a href="@Url.Action("QRStorage","My")"><i class="fa fa-book"></i> <span>编码信息</span></a></li>
+    <li><a href="@Url.Action("QRGenerate","My")"><i class="fa fa-book"></i> <span>生成编码</span></a></li>
+</ul>

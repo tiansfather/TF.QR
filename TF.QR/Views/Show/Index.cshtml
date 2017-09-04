@@ -1,0 +1,86 @@
+﻿@model TF.QR.DbQRInfo
+@{
+    
+}
+
+<!DOCTYPE html>
+<html>
+<head runat="server">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>@(Model.RealName)的信息</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <link rel="stylesheet" href="//cdn.bootcss.com/weui/1.1.1/style/weui.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/jquery-weui/1.0.1/css/jquery-weui.min.css">
+    <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet">
+</head>
+<body ontouchstart>
+    @if (!string.IsNullOrEmpty(Model.Photo))
+    {
+        <div style="padding:15px;text-align:center">
+            <img src="/data/thumbfile?filepath=@Model.Photo&w=300" />
+        </div>
+    }
+    <div class="weui-form-preview">
+        <div class="weui-form-preview__hd">
+            <label class="weui-form-preview__label">姓名</label>
+            <em class="weui-form-preview__value">@(Model.RealName)</em>
+        </div>
+        <div class="weui-form-preview__bd">
+            <div class="weui-form-preview__item">
+                <label class="weui-form-preview__label">性别</label>
+                <span class="weui-form-preview__value">@Model.Sex</span>
+            </div>
+            @if (Model.BirthDay != null)
+            {
+                <div class="weui-form-preview__item">
+                    <label class="weui-form-preview__label">年龄</label>
+                    <span class="weui-form-preview__value">
+                        @{
+                var age = DateTime.Now.Year - Convert.ToDateTime(Model.BirthDay).Year + 1;
+                @age
+                        }
+                    </span>
+                </div>
+            }
+            
+            <div class="weui-form-preview__item">
+                <label class="weui-form-preview__label">住址</label>
+                <span class="weui-form-preview__value">@Model.Address</span>
+            </div>
+            <div class="weui-form-preview__item">
+                <label class="weui-form-preview__label">紧急联系人</label>
+                <span class="weui-form-preview__value">@Model.ContactName</span>
+            </div>
+            <div class="weui-form-preview__item">
+                <label class="weui-form-preview__label">紧急联系方式</label>
+                <a href="tel:@Model.ContactMobile"><span class="weui-form-preview__value" style="color:green;font-size:20px;font-weight:bold"><i class="fa fa-phone" aria-hidden="true"></i>@Model.ContactMobile</span></a>
+            </div>
+            @if (!string.IsNullOrEmpty(Model.ContactName2))
+            {
+                <div class="weui-form-preview__item">
+                    <label class="weui-form-preview__label">紧急联系人2</label>
+                    <span class="weui-form-preview__value">@Model.ContactName2</span>
+                </div>
+            }
+            @if (!string.IsNullOrEmpty(Model.ContactMobile2))
+            {
+                <div class="weui-form-preview__item">
+                    <label class="weui-form-preview__label">紧急联系方式2</label>
+                    <a href="tel:@Model.ContactMobile2"><span class="weui-form-preview__value" style="color:green;font-size:20px;font-weight:bold"><i class="fa fa-phone" aria-hidden="true"></i>@Model.ContactMobile2</span></a>
+                </div>
+            }
+            <div class="weui-form-preview__item">
+                <label class="weui-form-preview__label">注意事项</label>
+                <span class="weui-form-preview__value">@Model.Tip</span>
+            </div>
+        </div>
+    </div>
+    <div style="padding:10px">
+        @{
+            var returnUrl = System.Web.HttpUtility.UrlEncode("/Show/VerifyEdit?code=" + Model.Code);
+        }
+        <a href="/OAuth2/Index?returnUrl=@returnUrl" class="weui-btn weui-btn_default">我要修改信息</a>
+    </div>
+</body>
+</html>

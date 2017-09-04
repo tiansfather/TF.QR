@@ -1,0 +1,92 @@
+﻿@model TF.QR.DbBuy
+@{
+    var currentfee = Model.ActualCost;
+}
+
+
+<!DOCTYPE html>
+<html>
+<head runat="server">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>支持 @Model.WeName 购买@(Model.Product.ProductName)</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <link rel="stylesheet" href="//cdn.bootcss.com/weui/1.1.1/style/weui.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/jquery-weui/1.0.1/css/jquery-weui.min.css">
+    <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet">
+</head>
+<body ontouchstart>
+    <div style="padding:15px;text-align:center">
+        <a href="/P/@Model.ProductID"><img src="/data/thumbfile?filepath=@Model.Product.Photos&w=300" /></a>
+    </div>
+    <div class="weui-cells__title">支持者列表</div>
+    <div class="weui-cells">
+        @foreach (var supporter in Model.Supporters)
+        {
+            <div class="weui-cell">
+                <div class="weui-cell__hd"><img src="@supporter.SupporterImg" width="50px"></div>
+                <div class="weui-cell__bd">
+                    <p>@supporter.SupporterWeName</p>
+                </div>
+                <div class="weui-cell__ft">@supporter.CreateTime.ToString("yyyy-MM-dd")</div>
+            </div>
+        }        
+    </div>
+
+    @if (Model.Supporters.Count < 6 && Request.Cookies["openid"].Value!=Model.OpenID && !Model.Supporters.Exists(o=>o.SupporterOpenID==Request.Cookies["openid"].Value))
+    {
+        <div style="padding:10px">            
+            <a  class="weui-btn weui-btn_warn" onclick="dosupport();"><i class="fa fa-diamond"></i> 友情支持</a>
+        </div>
+                }
+
+    <div class="weui-msg">
+        @if (Model.Supporters.Count == 6)
+        {
+            <div class="weui-msg__icon-area"><i class="weui-icon-success weui-icon_msg"></i></div>
+            <div class="weui-msg__text-area">
+                <h2 class="weui-msg__title">恭喜达到最佳友情价 <font color="red">@currentfee.ToString("n2")</font></h2>
+                <p class="weui-msg__desc"></p>
+            </div>
+        }
+        else
+        {
+            <div class="weui-msg__icon-area"><i class="weui-icon-waiting weui-icon_msg"></i></div>
+            <div class="weui-msg__text-area">
+                <h2 class="weui-msg__title">继续加油，目前友情支持价 <font color="red">@currentfee.ToString("n2")</font></h2>
+                <p class="weui-msg__desc"></p>
+            </div>
+        }
+        @if (Model.OpenID == Request.Cookies["openid"].Value)
+        {
+            <div class="weui-msg__opr-area">
+                <p class="weui-btn-area">
+                    <a href="/Pay/Index?buyid=@Model.Id" class="weui-btn weui-btn_primary">微信支付</a>
+                </p>
+            </div>
+        }
+        
+        <div class="weui-msg__extra-area">
+            <div class="weui-footer">
+                <p class="weui-footer__links">
+                    <a href="javascript:void(0);" class="weui-footer__link"></a>
+                </p>
+                <p class="weui-footer__text"></p>
+            </div>
+        </div>
+    </div>
+    <script src="//cdn.bootcss.com/jquery/1.11.0/jquery.min.js"></script>
+    <script src="//cdn.bootcss.com/jquery-weui/1.0.1/js/jquery-weui.min.js"></script>
+    <script>
+        function dosupport() {
+            $.post("/Product/Support/@Model.Id", {}, function (data) {
+                if (data.errCode == 0) {
+                    $.toast(data.errMsg, function () { location.reload();});
+                } else {
+                    $.toast(data.errMsg, "forbidden");
+                }
+            },'json')
+        }
+    </script>
+</body>
+</html>

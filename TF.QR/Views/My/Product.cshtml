@@ -1,0 +1,82 @@
+﻿@model List<TF.QR.DbProduct>
+@{
+    Layout = "~/Views/Shared/_AdminLTE.cshtml";
+    ViewBag.Title = "商品管理";
+}
+<iframe id="_hidden" name="_hidden" style="display:none"></iframe>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">商品管理</h3>
+
+                <div class="box-tools">
+
+                </div>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body table-responsive no-padding">
+                <table class="table table-hover">
+                    <tr>
+                        <th>商品名称</th>
+                        <th>商品图片</th>
+                        <th>售价</th>
+                        <th>操作</th>
+                    </tr>
+                    @{
+                        var i = 0;
+                    }
+                    @foreach (var item in Model)
+                    {
+                        i++;
+                        <tr>
+                            <td>@item.ProductName</td>
+                            <td>
+                                <img src="/Data/ThumbFile?filepath=@item.Photos&w=50"/>
+                            </td>
+                            <td><font color="red">@item.Cost </font></td>
+                            <td>
+                                <button type="button" class="btn btn-warning btn-sm" onclick="window.open('/P/@item.Id')">
+                                    <i class="fa fa-user"></i> 预览
+                                </button>
+                                <button type="button" class="btn btn-warning btn-sm" onclick="location.href='@Url.Action("ProductEdit", new {id=item.Id })'">
+                                    <i class="fa fa-user"></i> 编辑
+                                </button>
+                                <button type="button" class="btn btn-danger btn-sm" onclick="del(@item.Id)">
+                                    <i class="fa fa-close"></i> 删除
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+            <!-- /.box-body -->
+            <div class="box-footer clearfix">
+                <button type="button" class="btn btn-success pull-left" onclick="location.href='@Url.Action("ProductAdd")'">
+                    <i class="fa fa-commenting"></i> 添加
+                </button>
+
+            </div>
+        </div>
+        <!-- /.box -->
+    </div>
+</div>
+@section Footer{
+
+    <script>
+    $(function () {
+
+    })
+    function del(id) {
+        layer.confirm('确认删除此项？', {
+            btn: ['确认', '取消'] //按钮
+        }, function () {
+            $.post("@Url.Action("ProductDel")", { id: id }, function (data) {
+                location.reload();
+            })
+        }, function () {
+
+        });
+    }
+    </script>
+}

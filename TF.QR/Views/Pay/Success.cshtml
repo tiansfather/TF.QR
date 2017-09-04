@@ -1,0 +1,99 @@
+﻿@model TF.QR.DbBuy
+@{
+    ViewBag.Title = "Success";
+}
+
+<!DOCTYPE html>
+<html>
+<head runat="server">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>支付成功</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <link rel="stylesheet" href="//cdn.bootcss.com/weui/1.1.1/style/weui.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/jquery-weui/1.0.1/css/jquery-weui.min.css">
+    <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet">
+</head>
+<body ontouchstart>
+    <form id="myform">
+
+        <div class="weui-msg">
+            <div class="weui-msg__icon-area"><i class="weui-icon-success weui-icon_msg"></i></div>
+            <div class="weui-msg__text-area">
+                <h2 class="weui-msg__title">操作成功</h2>
+                <p class="weui-msg__desc">
+                    恭喜您支付成功，并且成为会员。有资格获得推别人给您的荐奖金 。<br />
+                    请确认以下信息
+                </p>
+            </div>
+
+        </div>
+        <div class="weui-cells weui-cells_form">
+            <div class="weui-cell">
+                <div class="weui-cell__hd"><label class="weui-label">姓名</label></div>
+                <div class="weui-cell__bd">
+                    <input id="realname" name="realname" class="weui-input" type="text" pattern="" placeholder="请输入姓名" required value="@Model.RealName">
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd"><label class="weui-label">手机号</label></div>
+                <div class="weui-cell__bd">
+                    <input id="mobile" name="mobile" class="weui-input" type="tel" pattern="" placeholder="请输入手机号" required value="@Model.Mobile">
+                </div>
+            </div>
+        </div>
+        <div class="weui-cells__title">收货地址</div>
+        <div class="weui-cells weui-cells_form">
+            <div class="weui-cell">
+                <div class="weui-cell__bd">
+                    <textarea id="address" name="address" class="weui-textarea" placeholder="请输入收货地址" rows="3">@Model.Address</textarea>
+                </div>
+            </div>
+        </div>
+        <div class="weui-cells__title">推荐人手机</div>
+        <div class="weui-cells">
+            <div class="weui-cell">
+                <div class="weui-cell__bd">
+                    <input id="recommandmobile" name="recommandmobile" class="weui-input" type="text" placeholder="请输入推荐人手机">
+                </div>
+            </div>
+        </div>
+        <div class="weui-cells__tips">必须是曾经在我们系统购买过的商品的会员号即手机号码，他将获得系统给于的您支付的10%的推荐金。</div>
+        <div class="weui-btn-area">
+            <a class="weui-btn weui-btn_primary" href="javascript:dosubmit();" id="submitBtn">提交</a>
+        </div>
+
+    </form>
+        <script src="//cdn.bootcss.com/jquery/1.11.0/jquery.min.js"></script>
+        <script src="//cdn.bootcss.com/jquery-weui/1.0.1/js/jquery-weui.min.js"></script>
+    <script>
+        function dosubmit() {
+            var realname = $("#realname").val(),
+                mobile = $("#mobile").val(),
+                address = $("#address").val(),
+                recommandmobile = $("#recommandmobile").val();
+            if (!realname) {
+                $.toptip('请输入姓名', 'error');
+                return false;
+            }
+            if (!mobile) {
+                $.toptip('请输入手机号码', 'error');
+                return false;
+            }
+            if (!address) {
+                $.toptip('请输入收货地址', 'error');
+                return false;
+            }
+            $.post("/Pay/Success?buyid=@Model.Id", $("#myform").serializeArray(), function (data) {
+                if (data.errCode != 0) {
+                        $.alert(data.errMsg);
+                    } else {
+                        $.toast(data.errMsg, function () {
+                            location.href = '/Page/Success?info=提交成功';
+                        })
+                    }
+            },'json')
+        }
+    </script>
+</body>
+</html>

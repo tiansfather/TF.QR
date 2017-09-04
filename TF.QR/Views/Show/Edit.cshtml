@@ -1,0 +1,266 @@
+﻿@model TF.QR.DbQRInfo
+@{
+    ViewBag.Title = "Edit";
+    var jssdk = ViewData["jssdk"] as Senparc.Weixin.MP.Helpers.JsSdkUiPackage;
+}
+
+<!DOCTYPE html>
+<html>
+<head runat="server">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>修改信息</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <link rel="stylesheet" href="//cdn.bootcss.com/weui/1.1.1/style/weui.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/jquery-weui/1.0.1/css/jquery-weui.min.css">
+    <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet">
+    <style>
+        #uploaderFiles img {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body ontouchstart>
+    <form id="infoForm">
+        <input type="hidden" name="id" value="@Model.Id"/>
+        <input type="hidden" name="code" value="@Model.Code" />
+        <input type="hidden" name="mediaid" id="mediaid" />
+        <input type="hidden" name="photo" value="@Model.Photo"/>
+        <div class="weui-cells__title">基本信息</div>
+        <div class="weui-cells weui-cells_form">            
+            <div class="weui-cell">
+                <div class="weui-cell__hd"><label class="weui-label">姓名</label></div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input" type="text" maxlength="4" value="@Model.RealName" placeholder="请输入姓名" name="realname" />
+                </div>
+            </div>
+            <div class="weui-cell weui-cell_select weui-cell_select-after">
+                <div class="weui-cell__hd">
+                    <label for="" class="weui-label">性别</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <select class="weui-select" name="sex">
+                        <option value="男">男</option>
+                        <option value="女">女</option>
+                    </select>
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd"><label for="" class="weui-label">生日</label></div>
+                <div class="weui-cell__bd">
+                    @{
+                        var birthdayStr = "";
+                        if (Model.BirthDay != null)
+                        {
+                            birthdayStr = Convert.ToDateTime(Model.BirthDay).ToString("yyyy-MM-dd");
+                        }
+                    }
+                    <input class="weui-input" type="date" value="@birthdayStr" name="BirthDay">
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd"><label for="" class="weui-label">地址</label></div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input" type="text" value="@Model.Address" name="Address">
+                </div>
+            </div>            
+        </div>
+        <div class="weui-cells__title">头像</div>
+        <div class="weui-cells weui-cells_form">
+            <div class="weui-cell">
+                <div class="weui-cell__bd">
+                    <div class="weui-uploader">
+                        <div class="weui-uploader__hd">
+                            <p class="weui-uploader__title">图片上传</p>
+                            @*<div class="weui-uploader__info">0/9</div>*@
+                        </div>
+                        <div class="weui-uploader__bd">
+                            <ul class="weui-uploader__files" id="uploaderFiles">
+                                @if (!string.IsNullOrEmpty(Model.Photo))
+                                {
+                                    <li class='weui-uploader__file' onclick='choose()'><img src='@Model.Photo' /></li>
+                                }
+                                @*<li class="weui-uploader__file" style="background-image:url(./images/pic_160.png)"></li>
+                            <li class="weui-uploader__file" style="background-image:url(./images/pic_160.png)"></li>
+                            <li class="weui-uploader__file" style="background-image:url(./images/pic_160.png)"></li>
+                            <li class="weui-uploader__file weui-uploader__file_status" style="background-image:url(./images/pic_160.png)">
+                                <div class="weui-uploader__file-content">
+                                    <i class="weui-icon-warn"></i>
+                                </div>
+                            </li>
+                            <li class="weui-uploader__file weui-uploader__file_status" style="background-image:url(./images/pic_160.png)">
+                                <div class="weui-uploader__file-content">50%</div>
+                            </li>*@
+                            </ul>
+                            @if (string.IsNullOrEmpty(Model.Photo))
+                            {
+                                <div class="weui-uploader__input-box" id="choosebox">
+                                    @*<input id="uploaderInput" class="weui-uploader__input" type="file" accept="image/*" multiple="">*@
+                                    <input class="weui-uploader__input" type="button" id="chooseImage" onclick="choose()" />
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+            
+            <div class="weui-cells__title">紧急联系人一</div>
+            <div class="weui-cells weui-cells_form">
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">姓名</label></div>
+                    <div class="weui-cell__bd">
+                        <input class="weui-input" type="text" maxlength="4" value="@Model.ContactName" name="ContactName" />
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">手机</label></div>
+                    <div class="weui-cell__bd">
+                        <input class="weui-input" type="text" maxlength="11" value="@Model.ContactMobile" name="ContactMobile" />
+                    </div>
+                </div>
+            </div>
+            <div class="weui-cells__title">紧急联系人二</div>
+            <div class="weui-cells weui-cells_form">
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">姓名</label></div>
+                    <div class="weui-cell__bd">
+                        <input class="weui-input" type="text" maxlength="4" value="@Model.ContactName2" name="ContactName2" />
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">手机</label></div>
+                    <div class="weui-cell__bd">
+                        <input class="weui-input" type="text" maxlength="11" value="@Model.ContactMobile2" name="ContactMobile2" />
+                    </div>
+                </div>
+            </div>
+            <div class="weui-cells__title">注意事项</div>
+            <div class="weui-cells weui-cells_form">
+                <div class="weui-cell">
+                    <div class="weui-cell__bd">
+                        <textarea class="weui-textarea" placeholder="请输入文本" rows="3" name="Tip" maxlength="100">@Model.Tip</textarea>
+
+                    </div>
+                </div>
+            </div>
+            <div class="weui-btn-area">
+                <a class="weui-btn weui-btn_primary" href="javascript:dosubmit();" id="submitBtn">提交</a>
+            </div>
+</form>
+    <script src="//cdn.bootcss.com/jquery/1.11.0/jquery.min.js"></script>
+    <script src="//cdn.bootcss.com/jquery-weui/1.0.1/js/jquery-weui.min.js"></script>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.1.0.js"></script>
+    <script>
+        wx.config({
+            debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+            appId: '@jssdk.AppId', // 必填，公众号的唯一标识
+            timestamp: '@jssdk.Timestamp', // 必填，生成签名的时间戳
+            nonceStr: '@jssdk.NonceStr', // 必填，生成签名的随机串
+            signature: '@jssdk.Signature',// 必填，签名
+            jsApiList: [
+                    'checkJsApi',
+                    'onMenuShareTimeline',
+                    'onMenuShareAppMessage',
+                    'onMenuShareQQ',
+                    'onMenuShareWeibo',
+                    'hideMenuItems',
+                    'showMenuItems',
+                    'hideAllNonBaseMenuItem',
+                    'showAllNonBaseMenuItem',
+                    'translateVoice',
+                    'startRecord',
+                    'stopRecord',
+                    'onRecordEnd',
+                    'playVoice',
+                    'pauseVoice',
+                    'stopVoice',
+                    'uploadVoice',
+                    'downloadVoice',
+                    'chooseImage',
+                    'previewImage',
+                    'uploadImage',
+                    'downloadImage',
+                    'getNetworkType',
+                    'openLocation',
+                    'getLocation',
+                    'hideOptionMenu',
+                    'showOptionMenu',
+                    'closeWindow',
+                    'scanQRCode',
+                    'chooseWXPay',
+                    'openProductSpecificView',
+                    'addCard',
+                    'chooseCard',
+                    'openCard'
+            ] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2。详见：http://mp.weixin.qq.com/wiki/7/aaa137b55fb2e0456bf8dd9148dd613f.html
+        });
+
+        wx.error(function (res) {
+            console.log(res);
+            alert('验证失败');
+        });
+    </script>
+    <script>
+    $(function () {
+        $("select[name='sex']").val('@Model.Sex');
+        })
+
+        function dosubmit() {
+            //先上传照片
+            uploadpic(function () {
+                var data = $("#infoForm").serializeArray();
+                $.showLoading();
+                $.post("/Show/Edit", data, function (data) {
+                    $.hideLoading();
+                    if (data.errCode != 0) {
+                        $.alert(data.errMsg);
+                    } else {
+                        $.toast(data.errMsg, function () {
+                            location.href = '/@Model.Code';
+                        })
+                    }
+                }, 'json')
+            })
+            
+        }
+        function choose() {
+            wx.chooseImage({
+                count: 1,
+                //sourceType: ['camera'], // 可以指定来源是相册还是相机，默认二者都有
+                success: function (res) {
+                    var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+                    for (var i = 0; i < localIds.length; i++) {
+                        $("#uploaderFiles").html("<li class='weui-uploader__file' onclick='choose()'><img src='" + localIds[i] + "'/></li>");
+                    }
+                    if ($("#uploaderFiles img").size() >0) {
+                        $("#choosebox").hide();
+                    }
+                }
+            });
+        }
+        function uploadpic(cb) {
+            var mediaid = $("#uploaderFiles img").attr("src");
+            if (!mediaid || mediaid.indexOf("upload")>0) {
+                cb();
+            } else {
+                var $that = $("#uploaderFiles img");
+                wx.uploadImage({
+                    localId: mediaid, // 需要上传的图片的本地ID，由chooseImage接口获得
+                    isShowProgressTips: 1, // 默认为1，显示进度提示
+                    success: function (res) {
+                        var serverId = res.serverId; // 返回图片的服务器端ID
+                        $("#mediaid").val(serverId);
+                        //alert(serverId);
+                        $that.addClass("uploaded");
+                        $that.parent("li").append('<div class="weui_uploader_status_content"><i class="weui_icon_success"></i></div>');
+                        cb();
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>
