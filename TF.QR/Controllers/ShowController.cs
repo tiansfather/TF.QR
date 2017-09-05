@@ -105,7 +105,7 @@
             }
             if (!model.ActivateDate.HasValue)
             {
-                return base.RedirectError("此编码尚未被激活");
+                return base.RedirectError("此编码尚未被激活,编码:"+code);
             }
             if (model.ExpireDate.HasValue)
             {
