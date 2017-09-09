@@ -8,8 +8,15 @@ namespace TF.QR.Controllers
 {
     public class ProductController : BaseController
     {
-        //
-        // GET: /Product/
+        /// <summary>
+        /// 产品列表
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult List()
+        {
+            var products = Config.Helper.CreateWhere<DbProduct>().Select();
+            return View(products);
+        }
 
         public ActionResult Index(int id)
         {

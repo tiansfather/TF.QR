@@ -7,7 +7,7 @@
     using System.IO;
     using System.Web.Mvc;
     using TF.QR;
-
+    using System.Linq;
     public class ShowController : BaseController
     {
         [WeUser]
@@ -139,19 +139,60 @@
         /// </summary>
         /// <returns></returns>
         [WeUser]
-        public ActionResult Bonus()
+        public ActionResult My()
         {
             var openid = Request.Cookies["openid"].Value;
             var weuser = Config.Helper.CreateWhere<DbWeUser>().Where(o => o.OpenID == openid).SingleOrDefault();
-            var recommands = Config.Helper.CreateWhere<DbRecommand>().Where(o => o.Mobile == weuser.Mobile).OrderBy(o=>o.CreateTime,ToolGood.ReadyGo.OrderType.Desc).SkipTake(0,10);
-            string accessTokenOrAppId = AccessTokenContainer.TryGetAccessToken(Config.AppId, Config.AppSecret, false);
-            foreach(var obj in recommands)
+            //var recommands = Config.Helper.CreateWhere<DbRecommand>().Where(o => o.Mobile == weuser.Mobile).OrderBy(o=>o.CreateTime,ToolGood.ReadyGo.OrderType.Desc).SkipTake(0,10);
+            //string accessTokenOrAppId = AccessTokenContainer.TryGetAccessToken(Config.AppId, Config.AppSecret, false);
+            //foreach(var obj in recommands)
+            //{
+            //    var user = Senparc.Weixin.MP.AdvancedAPIs.UserApi.Info(accessTokenOrAppId, obj.OpenID);
+            //    obj.HeadImg = user.headimgurl;
+            //}
+            //ViewData["weuser"] = weuser;
+            return View(weuser);
+        }
+
+        /// <summary>
+        /// 申请提现
+        /// </summary>
+        /// <param name="fee"></param>
+        /// <returns></returns>
+        [WeUser,HttpPost]
+        public ActionResult Cash(decimal fee)
+        {
+            var openid = Request.Cookies["openid"].Value;
+            var weuser = Config.Helper.CreateWhere<DbWeUser>().Where(o => o.OpenID == openid).Single();
+            var unavailabefee = Config.Helper.CreateWhere<DbCashHistory>().Where(o => o.OpenID == openid && o.Status == DbCashHistory.CashStatus.Created).Select().Sum(o=>o.Fee);
+            if (fee > weuser.Bonus - unavailabefee)
             {
-                var user = Senparc.Weixin.MP.AdvancedAPIs.UserApi.Info(accessTokenOrAppId, obj.OpenID);
-                obj.HeadImg = user.headimgurl;
+                return Error("提现金额不能大于可用推荐金");
             }
-            ViewData["weuser"] = weuser;
-            return View(recommands);
+            else
+            {
+                var history = new DbCashHistory()
+                {
+                    OpenID = openid,
+                    Fee = fee,
+                    Status = DbCashHistory.CashStatus.Created
+                };
+                Config.Helper.Insert(history);
+                return Success("提交成功");
+            }
+        }
+
+        /// <summary>
+        /// 提现记录
+        /// </summary>
+        /// <returns></returns>
+        [WeUser]
+        public ActionResult CashHistory()
+        {
+            var openid = Request.Cookies["openid"].Value;
+            var records = Config.Helper.CreateWhere<DbCashHistory>()
+                .Where(o => o.OpenID == openid).OrderBy(o => o.CreateTime, ToolGood.ReadyGo.OrderType.Desc).SkipTake(0, 10);
+            return View(records);
         }
     }
 }

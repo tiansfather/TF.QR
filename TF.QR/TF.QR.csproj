@@ -147,6 +147,7 @@
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Models\DbBase.cs" />
     <Compile Include="Models\DbBuy.cs" />
+    <Compile Include="Models\DbCashHistory.cs" />
     <Compile Include="Models\DbConfig.cs" />
     <Compile Include="Models\DbProduct.cs" />
     <Compile Include="Models\DbQRInfo.cs" />
@@ -2085,6 +2086,11 @@
     <Content Include="Views\My\Orders.cshtml" />
     <Content Include="Views\My\WeUsers.cshtml" />
     <Content Include="Views\Show\Bonus.cshtml" />
+    <Content Include="Views\Show\My.cshtml" />
+    <Content Include="Views\My\Recommand.cshtml" />
+    <Content Include="Views\My\Cash.cshtml" />
+    <Content Include="Views\Show\CashHistory.cshtml" />
+    <Content Include="Views\Product\List.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

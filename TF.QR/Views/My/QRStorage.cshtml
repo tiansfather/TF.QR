@@ -105,7 +105,7 @@
                         <td>
                             @*<span class="label label-success" v-if="item.ActivateDate">已激活</span>*@
                             
-                            <img :src="thumb(item.Photo,40)"/><br/><span class="label label-warning" v-if="!item.ActivateDate">未激活</span>
+                            <img :src="thumb(item.Photo,40)" style="cursor:pointer" @@click="showqrcode(item.Code)"/><br/><span class="label label-warning" v-if="!item.ActivateDate">未激活</span>
                         </td>
                         <td>{{item.Code}}</td>
                         <td>{{item.RealName}}</td>
@@ -277,8 +277,12 @@
 
 </div>
 
+<div id="qrcode" style="text-align:center;padding-top:10px;display:none">
+
+</div>
 
 @section Footer{
+<script src="https://cdn.bootcss.com/lrsjng.jquery-qrcode/0.14.0/jquery-qrcode.js"></script>
     <script>
         var page = new pageVue({
             el: "#app",
@@ -343,6 +347,17 @@
                     var querydata = $.extend({ filters: filterstr }, this.querydata);
                     var url = "/My/Export?v=1&" + $.param(querydata);
                     $("#_hidden").attr("src", url + "&_=" + Math.random());
+                },
+                showqrcode: function (code) {
+                    jQuery('#qrcode').qrcode({text:"http://1.jn99.net/"+code});
+                    //页面层
+                    layer.open({
+                        type: 1,
+                        title: false, //不显示标题
+                        skin: 'layui-layer-rim', //加上边框
+                        area: ['320px', '240px'], //宽高
+                        content: $("#qrcode")
+                    });
                 }
             },
             computed: {

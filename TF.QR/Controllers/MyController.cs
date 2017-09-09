@@ -124,6 +124,16 @@
         {
             return View();
         }
+        [User]
+        public ActionResult Recommand()
+        {
+            return View();
+        }
+        [User]
+        public ActionResult Cash()
+        {
+            return View();
+        }
     }
 }
 

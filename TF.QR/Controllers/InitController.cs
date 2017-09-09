@@ -15,6 +15,7 @@
             Config.Helper.TableHelper.TryCreateTable<DbBuySupporter>();
             Config.Helper.TableHelper.TryCreateTable<DbWeUser>();
             Config.Helper.TableHelper.TryCreateTable<DbRecommand>();
+            Config.Helper.TableHelper.TryCreateTable<DbCashHistory>();
             return base.Content("OK");
         }
     }

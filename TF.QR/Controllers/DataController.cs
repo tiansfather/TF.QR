@@ -146,6 +146,7 @@
         #endregion
 
         #region 会员信息
+        [User]
         public ActionResult WeUsers()
         {
             long num = long.Parse(base.Request.QueryString["page"]);
@@ -159,6 +160,93 @@
                 DateTimeFormat = "yyyy-MM-dd"
             };
             return base.Content(JsonConvert.SerializeObject(page, new JsonConverter[] { converter }));
+        }
+        #endregion
+
+        #region 推荐信息
+        [User]
+        public ActionResult Recommand()
+        {
+            long num = long.Parse(base.Request.QueryString["page"]);
+            string searchkey = base.Request.QueryString["searchkey"];
+            DbUser user = Config.GetCurrentUser();
+            Page<DbRecommand> page = Config.Helper.CreateWhere<DbRecommand>()
+                .Where(o => !o.IsDel)
+                .IfSet(searchkey).Where(o => o.Mobile.Contains(searchkey) || o.WeName.Contains(searchkey)).OrderBy(o => o.CreateTime, OrderType.Desc).Page(num, 20L, null);
+            IsoDateTimeConverter converter = new IsoDateTimeConverter
+            {
+                DateTimeFormat = "yyyy-MM-dd"
+            };
+            return base.Content(JsonConvert.SerializeObject(page, new JsonConverter[] { converter }));
+        }
+        #endregion
+        #region 提现信息
+        [User]
+        public ActionResult Cash()
+        {
+            try
+            {
+                long num = long.Parse(base.Request.QueryString["page"]);
+                var status = Request.QueryString["status"];
+                string searchkey = base.Request.QueryString["searchkey"];
+                DbUser user = Config.GetCurrentUser();
+                Page<DbCashHistory> page = Config.Helper.CreateWhere<DbCashHistory>()
+                    .Where(o => !o.IsDel)
+                    .IfTrue(status == "2").Where(o => o.Status == DbCashHistory.CashStatus.Cashed)
+                    .IfTrue(status == "1").Where(o => o.Status == DbCashHistory.CashStatus.Created)
+                    .IfSet(searchkey).AddWhereSql("openid in(select openid from dbweuser where mobile like '%" + searchkey + "%')")
+                    .OrderBy(o => o.CreateTime, OrderType.Desc).Page(num, 20L, null);
+                IsoDateTimeConverter converter = new IsoDateTimeConverter
+                {
+                    DateTimeFormat = "yyyy-MM-dd"
+                };
+                var result = new
+                {
+                    page.CurrentPage,
+                    page.ItemsPerPage,
+                    page.TotalItems,
+                    page.TotalPages,
+                    Items = page.Items.Select(o =>
+                    {
+                        var weuser = Config.Helper.FirstOrDefault<DbWeUser>("where openid=@0", o.OpenID);
+                        return new {o.Id, o.CreateTime, o.Fee, o.Status, Mobile = weuser.Mobile, Name = weuser.RealName };
+                    })
+                };
+                return base.Content(JsonConvert.SerializeObject(result, new JsonConverter[] { converter }));
+            }catch(Exception ex)
+            {
+                return Content(ex.Message);
+            }
+            
+        }
+        [User]
+        public ActionResult CashStatus(int id)
+        {
+            using (var trans=Config.Helper.UseTransaction())
+            {
+                try
+                {
+                    var record = Config.Helper.SingleById<DbCashHistory>(id);
+                    if (record.Status == DbCashHistory.CashStatus.Cashed)
+                    {
+                        return Error("此记录已被处理");
+                    }
+                    else
+                    {
+                        var weuser = Config.Helper.CreateWhere<DbWeUser>().Where(o => o.OpenID == record.OpenID).Single();
+                        weuser.Bonus -= record.Fee;
+                        Config.Helper.Update(weuser);
+                        record.Status = DbCashHistory.CashStatus.Cashed;
+                        Config.Helper.Update(record);
+                    }
+                    return Success("提交成功");
+                }catch(Exception ex)
+                {
+                    trans.Abort();
+                    return Error(ex.Message);
+                }
+            }
+            
         }
         #endregion
 

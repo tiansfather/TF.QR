@@ -1,0 +1,90 @@
+﻿@model TF.QR.DbWeUser
+    @{
+        var unavailableFee = TF.QR.Config.Helper.CreateWhere<TF.QR.DbCashHistory>().Where(o => o.OpenID == Model.OpenID && o.Status == TF.QR.DbCashHistory.CashStatus.Created).Select().Sum(o => o.Fee);
+        var availableFee = Model.Bonus - unavailableFee;
+    }
+
+    <!DOCTYPE html>
+    <html>
+    <head runat="server">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>我的信息</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+        <link rel="stylesheet" href="//cdn.bootcss.com/weui/1.1.1/style/weui.min.css">
+        <link rel="stylesheet" href="//cdn.bootcss.com/jquery-weui/1.0.1/css/jquery-weui.min.css">
+        <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet">
+    </head>
+    <body ontouchstart>
+        <div class="weui-cells">
+            <div class="weui-cell">
+                <div class="weui-cell__bd">
+                    <p>姓名</p>
+                </div>
+                <div class="weui-cell__ft">@Model.RealName</div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__bd">
+                    <p>手机号</p>
+                </div>
+                <div class="weui-cell__ft">@Model.Mobile</div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__bd">
+                    <p>推荐金</p>
+                </div>
+                <div class="weui-cell__ft"><font color="red" style="font-weight:bold">@(Model.Bonus)</font>元</div>
+            </div>
+        </div>
+        <div class="weui-cells__tips" style="text-align:right">不可用金额:@(unavailableFee)元</div>
+        <div class="weui-btn-area">
+            <a class="weui-btn weui-btn_primary" href="javascript:docash()">申请提现</a>
+        </div>
+        <div class="weui-btn-area">
+            <a class="weui-btn weui-btn_default" href="/Show/CashHistory">提现历史</a>
+        </div>
+        <script src="//cdn.bootcss.com/jquery/1.11.0/jquery.min.js"></script>
+        <script src="//cdn.bootcss.com/jquery-weui/1.0.1/js/jquery-weui.min.js"></script>
+        <script>
+            function docash() {
+                var maxfee =@availableFee;
+                if (maxfee < 50) {
+                    $.alert("您的推荐金不足50，无法提现");
+                    return false;
+                }
+                $.prompt({
+                    title: '请输入提现金额',
+                    text: '最大可提现金额为' + maxfee,
+                    input: '50',
+                    empty: false, // 是否允许为空
+                    onOK: function (input) {
+                        //点击确认
+                        if (isNaN(input) ) {
+                            $.alert("输入不正确");
+                            return false;
+                        } else if (input<50){
+                            $.alert("提现金额最低为50元");
+                            return false;
+                        }
+                        else {
+                            $.showLoading();
+                            $.post("/Show/Cash", {fee:input}, function (data) {
+                                $.hideLoading();
+                                if (data.errCode != 0) {
+                                    $.alert(data.errMsg);
+                                } else {
+                                    $.toast(data.errMsg, function () {
+                                        location.href = '/Page/Success?info='+escape("提现申请成功后将在3天内通过微信转账或电话联系方式兑现");
+                                    })
+                                }
+                            }, 'json')
+                        }
+                    },
+                    onCancel: function () {
+                        //点击取消
+                    }
+                });
+            }
+        </script>
+    </body>
+</html>

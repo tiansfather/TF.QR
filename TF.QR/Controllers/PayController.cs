@@ -234,32 +234,32 @@ namespace TF.QR.Controllers
                     buy.Mobile = form["Mobile"];
                     buy.RealName = form["RealName"];
                     buy.Address = form["Address"];
-                    //buy.RecommandMobile = form["RecommandMobile"];
+                    buy.RecommandMobile = form["RecommandMobile"];
                     //判断推荐人是否存在
-                    //if (!string.IsNullOrEmpty(buy.RecommandMobile))
-                    //{
-                    //    var recommanduser = Config.Helper.CreateWhere<DbWeUser>()
-                    //    .Where(o => o.Mobile == buy.RecommandMobile).FirstOrDefault();
-                    //    if (recommanduser == null)
-                    //    {
-                    //        //return Error("推荐人不存在");
-                    //        throw new Exception("推荐人不存在");
-                    //    }
-                    //    else
-                    //    {
-                    //        var recommand = new DbRecommand()
-                    //        {
-                    //            OpenID=buy.OpenID,
-                    //            Mobile = buy.RecommandMobile,
-                    //            Fee = buy.ActualCost * 0.1M,
-                    //            WeName = buy.WeName
-                    //        };
-                    //        Config.Helper.Save(recommand);
-                    //        recommanduser.Bonus += recommand.Fee;
-                    //        Config.Helper.Save(recommanduser);
-                    //    }
-                    //}
-                    
+                    if (!string.IsNullOrEmpty(buy.RecommandMobile))
+                    {
+                        var recommanduser = Config.Helper.CreateWhere<DbWeUser>()
+                        .Where(o => o.Mobile == buy.RecommandMobile).FirstOrDefault();
+                        if (recommanduser == null)
+                        {
+                            //return Error("推荐人不存在");
+                            throw new Exception("推荐人不存在");
+                        }
+                        else
+                        {
+                            var recommand = new DbRecommand()
+                            {
+                                OpenID = buy.OpenID,
+                                Mobile = buy.RecommandMobile,
+                                Fee = buy.ActualCost * 0.2M,
+                                WeName = buy.WeName
+                            };
+                            Config.Helper.Save(recommand);
+                            recommanduser.Bonus += recommand.Fee;
+                            Config.Helper.Save(recommanduser);
+                        }
+                    }
+
                     Config.Helper.Save(buy);
                     //加入会员表
                     var weuser = Config.Helper.CreateWhere<DbWeUser>()

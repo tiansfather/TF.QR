@@ -1,0 +1,46 @@
+﻿@model List<TF.QR.DbCashHistory>
+@{
+    
+}
+
+<!DOCTYPE html>
+<html>
+<head runat="server">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>提现历史</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <link rel="stylesheet" href="//cdn.bootcss.com/weui/1.1.1/style/weui.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/jquery-weui/1.0.1/css/jquery-weui.min.css">
+    <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet">
+</head>
+<body ontouchstart>
+    @foreach (var obj in Model)
+    {
+        <div class="weui-form-preview" style="margin-top:20px;">
+            <div class="weui-form-preview__hd">
+                <label class="weui-form-preview__label">申请金额</label>
+                <em class="weui-form-preview__value">¥@obj.Fee</em>
+            </div>
+            <div class="weui-form-preview__bd">
+                <div class="weui-form-preview__item">
+                    <label class="weui-form-preview__label">申请时间</label>
+                    <span class="weui-form-preview__value">@obj.CreateTime.ToString("yyyy-MM-dd")</span>
+                </div>
+            </div>
+            <div class="weui-form-preview__ft">
+                <button type="button" class="weui-form-preview__btn weui-form-preview__btn_primary" >
+                    @if (obj.Status == TF.QR.DbCashHistory.CashStatus.Cashed)
+                    {
+                        <span style="color:green">已处理</span>
+                    }
+                    else {
+                        <span style="color:red">待处理</span>
+                    }
+                </button>
+            </div>
+        </div>
+    }
+    
+</body>
+</html>

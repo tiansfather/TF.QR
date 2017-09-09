@@ -1,0 +1,134 @@
+﻿@{
+    Layout = "~/Views/Shared/_AdminLTE.cshtml";
+    ViewBag.Title = "提现信息";
+}
+
+<iframe id="_hidden" name="_hidden" style="display:none"></iframe>
+<div class="row hide" id="app">
+    <div class="col-md-2">
+        <div class="box box-solid">
+            <div class="box-header with-border">
+                <h3 class="box-title">按状态</h3>
+
+                <div class="box-tools">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                        <i class="fa fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="box-body no-padding" style="display: block;">
+                <ul class="nav nav-pills nav-stacked">
+                    <li :class="{active:!querydata.Status}">
+                        <a href="#" @@click="filterby({Status:''})">
+                            <i class="fa fa-inbox"></i> 所有
+                        </a>
+                    </li>
+                    <li :class="{active:querydata.Status==1}">
+                        <a href="#" @@click="filterby({Status:1})">
+                            <i class="fa fa-inbox"></i> 待处理
+                        </a>
+                    </li>
+                    <li :class="{active:querydata.Status==2}">
+                        <a href="#" @@click="filterby({Status:2})">
+                            <i class="fa fa-inbox"></i> 已处理
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.box-body -->
+        </div>
+    </div>
+    <div class="col-sm-10">
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">提现信息</h3>
+
+                <div class="box-tools pull-right col-sm-3">
+                    <div class="input-group input-group-sm">
+                        <input type="text" class="form-control" v-model="searchkey">
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-info btn-flat" @@click="filterby({searchkey:searchkey})">Go!</button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body table-responsive no-padding">
+                <table class="table table-hover">
+                    <tr>
+                        <th><input type="checkbox" @@click="checkall" v-model="allchecked" /></th>
+                        <th>申请人</th>
+                        <th>手机号</th>
+                        <th>提现金额</th>
+                        <th>申请日期</th>
+                        <th>状态</th>
+                        <th>操作</th>
+                    </tr>
+                    <tr v-for="(item,index) in pagedata.Items">
+                        <td><input type="checkbox" :value="item.Id" name="member" v-model='checkedids' /></td>
+                        <td>{{item.Name}}</td>
+                        <td>{{item.Mobile}}</td>
+                        <td>{{item.Fee}}</td>
+                        <td>{{dateformat(item.CreateTime)}}</td>
+                        <td>{{item.Status==1?"待处理":"已处理"}}</td>
+                        <td>
+                            <button type="button" class="btn btn-info btn-sm" @@click="status(item.Id)" title="处理" v-if="item.Status==1">
+                                <i class="fa fa-edit"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <!-- /.box-body -->
+            <div class="box-footer clearfix">
+                <pagination :page="page" :totalpage="totalpage" @@goto="gotopage"></pagination>
+            </div>
+        </div>
+        <!-- /.box -->
+        <div class="row no-print">
+            <div class="col-xs-12">
+                <div class="btn-group">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+@section Footer{
+    <script>
+        var page = new pageVue({
+            el: "#app",
+            data: {
+                dataurl: "/data/cash",
+                searchkey:"",
+                currentitem: {},
+            },
+            watch:{
+            },
+            methods: {
+                status: function (id) {
+                    var _self = this;
+                    layer.confirm('确认提交？', {
+                        btn: ['确认', '取消'] //按钮
+                    }, function (index) {
+                        layer.close(index);
+                        _self.$http.post(_self.dataurl + "status", { id: id }, { emulateJSON: true }).then(function (data) {
+                            _self.loaddata();
+                            _self.checkedids = [];
+
+                        });
+                    }, function () {
+
+                    });
+
+                }
+            },
+            computed: {
+            }
+        })
+    </script>
+}
