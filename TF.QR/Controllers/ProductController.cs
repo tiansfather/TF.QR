@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Senparc.Weixin.MP.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -20,6 +21,8 @@ namespace TF.QR.Controllers
 
         public ActionResult Index(int id)
         {
+            JsSdkUiPackage package = JSSDKHelper.GetJsSdkUiPackage(TF.QR.Config.AppId, TF.QR.Config.AppSecret, base.Request.Url.AbsoluteUri);
+            base.ViewData["jssdk"] = package;
             var product = Config.Helper.SingleById<DbProduct>(id);
             return View(product);
         }
@@ -56,6 +59,8 @@ namespace TF.QR.Controllers
         [WeUser]
         public ActionResult ForBuy(int id)
         {
+            JsSdkUiPackage package = JSSDKHelper.GetJsSdkUiPackage(TF.QR.Config.AppId, TF.QR.Config.AppSecret, base.Request.Url.AbsoluteUri);
+            base.ViewData["jssdk"] = package;
             var buy = Config.Helper.SingleById<DbBuy>(id);
             return View(buy);
         }
@@ -85,7 +90,7 @@ namespace TF.QR.Controllers
                             BuyID = id
                         };
                         Config.Helper.Save(support);
-                        buy.ActualCost = buy.Product.Cost * Convert.ToDecimal(Math.Pow(0.97, buy.Supporters.Count));
+                        buy.ActualCost = buy.Product.Cost * Convert.ToDecimal(Math.Pow(0.98, buy.Supporters.Count));
                         Config.Helper.Save(buy);
                     }
                     return Success("提交成功");

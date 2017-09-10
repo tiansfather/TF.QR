@@ -18,6 +18,7 @@
         public static readonly string AppId = WebConfigurationManager.AppSettings["WeixinAppId"];
         public static readonly string AppSecret = WebConfigurationManager.AppSettings["WeixinAppSecret"];
         public static readonly string EncodingAESKey = WebConfigurationManager.AppSettings["WeixinEncodingAESKey"];
+        public static readonly string HostUrl= WebConfigurationManager.AppSettings["HostUrl"];
         private static object lockobj = new object();
         public static readonly string Token = WebConfigurationManager.AppSettings["WeixinToken"];
 
@@ -32,7 +33,7 @@
             else
             {
                 TimeSpan span = (TimeSpan) (DateTime.Now - Convert.ToDateTime(configValue));
-                if (span.TotalDays > 30.0)
+                if (span.TotalDays > 1)
                 {
                     flag = true;
                 }

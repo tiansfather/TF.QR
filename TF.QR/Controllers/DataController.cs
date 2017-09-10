@@ -58,7 +58,7 @@
         [User, HttpPost]
         public ActionResult QRStorageActivate(string ids)
         {
-            List<DbQRInfo> source = Config.Helper.CreateWhere<DbQRInfo>().AddWhereSql("id in (@0)", new object[] { ids }).Select(null);
+            List<DbQRInfo> source = Config.Helper.CreateWhere<DbQRInfo>().AddWhereSql("id in ("+ids+")").Select(null);
             if (source.Exists(o => !o.CanBeAcessed))
             {
                 return base.Error("没有操作权限");

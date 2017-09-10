@@ -22,8 +22,8 @@
             <div class="weui-msg__text-area">
                 <h2 class="weui-msg__title">操作成功</h2>
                 <p class="weui-msg__desc">
-                    恭喜您支付成功，并且成为会员。有资格获得推别人给您的荐奖金 。<br />
-                    请确认以下信息
+                    恭喜您支付成功，并且成为会员。有资格获得推荐奖金 。<br />
+                    请确认以下信息，方便我们将产品邮寄给您
                 </p>
             </div>
 
@@ -54,11 +54,11 @@
         <div class="weui-cells">
             <div class="weui-cell">
                 <div class="weui-cell__bd">
-                    <input id="recommandmobile" name="recommandmobile" class="weui-input" type="text" placeholder="请输入推荐人手机">
+                    <input id="recommandmobile" name="recommandmobile" class="weui-input" type="text" placeholder="非本人手机号码">
                 </div>
             </div>
         </div>
-        <div class="weui-cells__tips">必须是曾经在我们系统购买过的商品的会员号即手机号码，他将获得系统给于的推荐金。</div>
+        <div class="weui-cells__tips">必须是曾经在我们系统购买过商品的会员号即手机号码，他将获得系统给予的推荐奖金，并可提现！</div>
         <div class="weui-btn-area">
             <a class="weui-btn weui-btn_primary" href="javascript:dosubmit();" id="submitBtn">提交</a>
         </div>
@@ -78,6 +78,10 @@
             }
             if (!mobile) {
                 $.toptip('请输入手机号码', 'error');
+                return false;
+            }
+            if (recommandmobile == mobile) {
+                $.toptip('推荐人号码不能是自己的号码', 'error');
                 return false;
             }
             if (!address) {

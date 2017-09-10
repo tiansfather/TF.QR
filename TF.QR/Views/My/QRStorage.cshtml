@@ -349,6 +349,7 @@
                     $("#_hidden").attr("src", url + "&_=" + Math.random());
                 },
                 showqrcode: function (code) {
+                    $("#qrcode").html('');
                     jQuery('#qrcode').qrcode({text:"http://1.jn99.net/"+code});
                     //页面层
                     layer.open({

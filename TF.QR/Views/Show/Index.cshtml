@@ -1,13 +1,13 @@
 ﻿@model TF.QR.DbQRInfo
 @{
-    
+    var name = string.IsNullOrEmpty(Model.RealName) ? "未设定" : Model.RealName;
 }
 
 <!DOCTYPE html>
 <html>
 <head runat="server">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>@(Model.RealName)的信息</title>
+    <title>@(name)的信息</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
     <link rel="stylesheet" href="//cdn.bootcss.com/weui/1.1.1/style/weui.min.css">
@@ -24,7 +24,7 @@
     <div class="weui-form-preview">
         <div class="weui-form-preview__hd">
             <label class="weui-form-preview__label">姓名</label>
-            <em class="weui-form-preview__value">@(Model.RealName)</em>
+            <em class="weui-form-preview__value">@(name)</em>
         </div>
         <div class="weui-form-preview__bd">
             <div class="weui-form-preview__item">
