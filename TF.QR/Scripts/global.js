@@ -162,7 +162,8 @@ var pageVue = Vue.extend({
             }).then(function (data) {
                 this.pagedata = data.body;
                 this.page = this.pagedata.CurrentPage;
-            });
+                });
+            this.currentindex = -1;
             //this.$http.get(url, { page: this.page,pagesize:1 }).then(function (data) {
             //    this.pagedata = data.body;
             //    this.page = this.pagedata.CurrentPage;

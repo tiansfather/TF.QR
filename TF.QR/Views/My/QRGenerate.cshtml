@@ -2,7 +2,7 @@
     Layout = "~/Views/Shared/_AdminLTE.cshtml";
     ViewBag.Title = "编码生成";
 }
-
+<iframe id="_hidden" name="_hidden" style="display:none"></iframe>
 <div class="row">
     <div class="col-md-12">
         <div class="box box-info">
@@ -50,7 +50,7 @@
                     layer.alert(data.errMsg, { icon: 5 });
                 } else {
                     layer.alert("生成成功");
-                    //location.href = '/My/QRStorage';
+                    _hidden.location.href = '/Data/Download?filename=/code.txt';
                 }
             },'json')
         }

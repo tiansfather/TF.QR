@@ -73,8 +73,8 @@ namespace TF.QR.Controllers
                 try
                 {
                     var openid = Request.Cookies["openid"].Value;
-                    var accessToken = Senparc.Weixin.MP.Containers.AccessTokenContainer.TryGetAccessToken(Config.AppId, Config.AppSecret);
-                    var userinfo = Senparc.Weixin.MP.AdvancedAPIs.UserApi.Info(accessToken, openid);
+                    //var accessToken = Senparc.Weixin.MP.Containers.AccessTokenContainer.TryGetAccessToken(Config.AppId, Config.AppSecret);
+                    //var userinfo = Senparc.Weixin.MP.AdvancedAPIs.UserApi.Info(accessToken, openid);
                     var buy = Config.Helper.SingleById<DbBuy>(id);
                     if (buy.Supporters.Exists(o => o.SupporterOpenID == openid))
                     {
@@ -85,8 +85,8 @@ namespace TF.QR.Controllers
                         var support = new DbBuySupporter()
                         {
                             SupporterOpenID = openid,
-                            SupporterImg = userinfo.headimgurl,
-                            SupporterWeName = userinfo.nickname,
+                            SupporterImg =Request.Cookies["headimg"].Value,
+                            SupporterWeName = Request.Cookies["wename"].Value,
                             BuyID = id
                         };
                         Config.Helper.Save(support);

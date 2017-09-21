@@ -186,11 +186,11 @@
         {
             get
             {
-                if (_helper == null)
-                {
-                    _helper = SqlHelperFactory.OpenFormConnStr("conn", SqlType.None);
-                }
-                return _helper;
+                //if (_helper == null)
+                //{
+                //    _helper = SqlHelperFactory.OpenFormConnStr("conn", SqlType.None);
+                //}
+                return _helper = SqlHelperFactory.OpenFormConnStr("conn", SqlType.None); 
             }
         }
     }

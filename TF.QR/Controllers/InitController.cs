@@ -18,6 +18,14 @@
             Config.Helper.TableHelper.TryCreateTable<DbCashHistory>();
             return base.Content("OK");
         }
+
+        public ActionResult Info()
+        {
+            var openid = "ooZJguE850-mSlAN8P6TiTCVU2Y0";
+            var accessToken = Senparc.Weixin.MP.Containers.AccessTokenContainer.TryGetAccessToken(Config.AppId, Config.AppSecret);
+            var userinfo = Senparc.Weixin.MP.AdvancedAPIs.UserApi.Info(accessToken, openid);
+            return Content(accessToken + "-" + Newtonsoft.Json.JsonConvert.SerializeObject(userinfo));
+        }
     }
 }
 

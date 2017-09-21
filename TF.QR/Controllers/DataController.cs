@@ -30,6 +30,11 @@
             Config.Base64ToImg(filecontent.Substring(filecontent.IndexOf(",") + 1), str2);
             return base.Success(str2);
         }
+        
+        public ActionResult DownLoad(string filename)
+        {
+            return File(Server.MapPath(filename));
+        }
 
         #region 编码信息
         [User]
@@ -180,6 +185,7 @@
             return base.Content(JsonConvert.SerializeObject(page, new JsonConverter[] { converter }));
         }
         #endregion
+
         #region 提现信息
         [User]
         public ActionResult Cash()

@@ -8,7 +8,7 @@
     using TF.Common;
     using TF.QR;
     using ToolGood.ReadyGo;
-
+    using System.Collections.Generic;
     public class MyController : BaseController
     {
         [User]
@@ -66,9 +66,16 @@
         [HttpPost, User]
         public ActionResult QRGenerate(int gennumber)
         {
+            var codeList = new List<string>();
             Parallel.For(0, gennumber, delegate (int o) {
-                Config.GenCode();
+                codeList.Add(Config.GenCode());
             });
+            //生成文件
+            System.IO.File.WriteAllText(Server.MapPath("/code.txt"), "");
+            foreach(var code in codeList)
+            {
+                System.IO.File.AppendAllLines(Server.MapPath("/code.txt"), new string[] { code });
+            }
             return base.Success("生成成功");
         }
 
